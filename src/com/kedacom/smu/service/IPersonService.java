@@ -16,10 +16,12 @@ public interface IPersonService {
 	public List<Person> queryAll();
 
 	public void add(Person person);
+	
+	public void callAddPerson(Person person);
 
 	public void delete(Integer id);
 
-	public void update(Person person) throws InterruptedException;
+	public void update(Person person);
 
 	public Person findByName(String name);
 

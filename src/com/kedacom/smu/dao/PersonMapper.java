@@ -19,6 +19,8 @@ public interface PersonMapper {
 	int countAll();
 
 	void insert(Person person);
+	
+	void callAddPerson(Person person);
 
 	void delete(Integer id);
 

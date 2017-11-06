@@ -75,7 +75,8 @@ public class PersonController {
 		ResultVO resultVO = new ResultVO();
 		System.out.println(person.toString());
 		if (person.getName() != null) {
-			personService.add(person);
+			personService.callAddPerson(person);
+			//personService.add(person);
 			resultVO.setSuccess(true);
 			resultVO.setMessage("插入成功");
 		} else {
@@ -88,7 +89,7 @@ public class PersonController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@ResponseBody
 	public String update(@PathVariable Integer id, @ModelAttribute("person") Person person, HttpServletRequest request,
-			HttpServletResponse response) throws InterruptedException {
+			HttpServletResponse response){
 		ResultVO resultVO = new ResultVO();
 		Person oldperson = personService.findById(id);
 		if (oldperson != null) {

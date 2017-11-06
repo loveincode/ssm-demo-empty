@@ -15,6 +15,14 @@
         insert into person(name,age) values(#{name},#{age})
     </insert>
     
+    <insert id="callAddPerson" parameterType="Person" useGeneratedKeys="true" >
+       {call AddPerson
+       	(#{name,jdbcType=VARCHAR,mode=IN},
+         #{age,jdbcType=INTEGER,mode=IN}
+        )
+       }
+    </insert>
+    
     <update id="update" parameterType="Person">
         update person set name=#{name},age=#{age} where id=#{id}
     </update>

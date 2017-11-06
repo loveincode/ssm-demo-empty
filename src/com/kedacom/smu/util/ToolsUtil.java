@@ -22,10 +22,10 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.DefaultScriptExecutor;
 import org.springframework.data.redis.core.script.ScriptExecutor;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kedacom.shiro.demo.session.RedisRepository;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -239,20 +239,25 @@ public class ToolsUtil {
 		String methodName = e.getMethodName();
 		return methodName;
 	}
+	
+	// 去掉
+	//public static List<Object> getBusinessDataFromRedis(RedisRepository redisRepository, List<Object> list,
+	//		Object... objs) {
+	//	RedisTemplate rt = redisRepository.getJedisManager().getRedisTemplate();
+	//	return getBusinessDataFromRedis(rt, list, objs);
+	//}
 
-	public static List<Object> getBusinessDataFromRedis(RedisRepository redisRepository, List<Object> list,
-			Object... objs) {
-		RedisTemplate rt = redisRepository.getJedisManager().getRedisTemplate();
-		return getBusinessDataFromRedis(rt, list, objs);
-	}
-
+	@Transactional
 	public static List<Object> getBusinessDataFromRedis(RedisTemplate rt, List<Object> list, Object... objs) {
 		DefaultRedisScript<Object> script = new DefaultRedisScript<Object>();
-		script.setLocation(new FileSystemResource("/opt/kdm/system/script/getFromRedis.lua"));
+		ConfigProperties configProperties = new ConfigProperties("smu.properties");
+		script.setLocation(new FileSystemResource(configProperties.getProperty("scriptPath")));
+		log.info(configProperties.getProperty("scriptPath"));
 		script.setResultType(Object.class);
 		System.out.println("getSha1 " + script.getSha1());
 
 		GenericToStringSerializer<Object> ser = new GenericToStringSerializer<Object>(Object.class);
+		
 		ScriptExecutor<Object> se = new DefaultScriptExecutor<Object>(rt);
 		List<Object> redisRets = (List<Object>) se.execute(script, ser, ser, list, objs);
 		return redisRets;
@@ -292,7 +297,9 @@ public class ToolsUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getDataBaseUUID());
+		ConfigProperties configProperties = new ConfigProperties("smu.properties");
+		System.out.println(configProperties.getProperty("scriptPath"));
+		
 	}
 
 }
