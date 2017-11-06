@@ -8,9 +8,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-
-@Component
+	
 public class ConfigProperties {
 	private static Logger log = Logger.getLogger(ConfigProperties.class);
 

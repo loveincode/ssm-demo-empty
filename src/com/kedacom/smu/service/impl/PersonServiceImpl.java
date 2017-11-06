@@ -29,13 +29,13 @@ public class PersonServiceImpl implements IPersonService {
 		return personMapper.queryAll();
 	}
 
+	@SuppressWarnings("unused")
 	public void add(Person person) {
 
 		// mysql
 		personMapper.insert(person);
 		try {
 			// redis
-			
 			int i = 1 / 0;
 		} catch (Exception e) {
 			throw new RuntimeException();
@@ -43,29 +43,31 @@ public class PersonServiceImpl implements IPersonService {
 	}
 
 	// 调用存储函数
+	@SuppressWarnings("rawtypes")
 	public void callAddPerson(Person person) {
 
 		// mysql 存储过程
 		personMapper.callAddPerson(person);
 		try {
 
-			//WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
-			//RedisRepository redisRepository = (RedisRepository) wac.getBean("redisRepository");
-			
+			// WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
+			// RedisRepository redisRepository = (RedisRepository)
+			// wac.getBean("redisRepository");
+
 			WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
 			RedisTemplate rt = (RedisTemplate) wac.getBean("redisTemplate");
-			
+
 			List<Object> list1 = new ArrayList<Object>();
-	    	list1.add("testWrite");
-	    	list1.add("123");
-	    	List<Object> redisRets1 = ToolsUtil.getBusinessDataFromRedis(rt, list1);
-	    	System.err.println(redisRets1.toString());
+			list1.add("testWrite");
+			list1.add("123");
+			List<Object> redisRets1 = ToolsUtil.redisCall(rt, list1);
+			System.err.println(redisRets1.toString());
 			List<Object> list2 = new ArrayList<Object>();
-	    	list2.add("testRead");
-	    	List<Object> redisRets2 = ToolsUtil.getBusinessDataFromRedis(rt, list2);
-	    	
+			list2.add("testRead");
+			List<Object> redisRets2 = ToolsUtil.redisCall(rt, list2);
+
 			System.err.println(redisRets2.toString());
-			int i = 1/0;
+			// int i = 1/0;
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -32,6 +32,8 @@ import sun.misc.BASE64Encoder;
 
 public class ToolsUtil {
 	private static Logger log = Logger.getLogger(ToolsUtil.class);
+	
+	private static ConfigProperties smuconfigProperties = new ConfigProperties("smu.properties");
 
 	/**
 	 * 判断字符串是否为空，为空则返回true，否则返回false
@@ -104,7 +106,7 @@ public class ToolsUtil {
 	}
 
 	public static long getCurDateLong() {
-		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		//SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date d = new Date();
 		return d.getTime();
 	}
@@ -239,20 +241,15 @@ public class ToolsUtil {
 		String methodName = e.getMethodName();
 		return methodName;
 	}
-	
-	// 去掉
-	//public static List<Object> getBusinessDataFromRedis(RedisRepository redisRepository, List<Object> list,
-	//		Object... objs) {
-	//	RedisTemplate rt = redisRepository.getJedisManager().getRedisTemplate();
-	//	return getBusinessDataFromRedis(rt, list, objs);
-	//}
 
+	
 	@Transactional
-	public static List<Object> getBusinessDataFromRedis(RedisTemplate rt, List<Object> list, Object... objs) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	//redisCall
+	public static List<Object> redisCall(RedisTemplate rt, List<Object> list, Object... objs) {
 		DefaultRedisScript<Object> script = new DefaultRedisScript<Object>();
-		ConfigProperties configProperties = new ConfigProperties("smu.properties");
-		script.setLocation(new FileSystemResource(configProperties.getProperty("scriptPath")));
-		log.info(configProperties.getProperty("scriptPath"));
+		script.setLocation(new FileSystemResource(smuconfigProperties.getProperty("scriptPath")));
+		log.info(smuconfigProperties.getProperty("scriptPath"));
 		script.setResultType(Object.class);
 		System.out.println("getSha1 " + script.getSha1());
 
@@ -263,6 +260,7 @@ public class ToolsUtil {
 		return redisRets;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void dumpList(String string, List<Object> list) {
 		int i = 0;
 		for (Object item : list) {
@@ -275,6 +273,7 @@ public class ToolsUtil {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public static long getSysUptime() {
 		try {
 			return Double.valueOf(new Scanner(new FileInputStream("/proc/uptime")).next()).longValue();

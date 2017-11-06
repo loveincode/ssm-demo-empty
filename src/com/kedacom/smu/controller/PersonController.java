@@ -76,7 +76,7 @@ public class PersonController {
 		System.out.println(person.toString());
 		if (person.getName() != null) {
 			personService.callAddPerson(person);
-			//personService.add(person);
+			// personService.add(person);
 			resultVO.setSuccess(true);
 			resultVO.setMessage("插入成功");
 		} else {
@@ -89,7 +89,7 @@ public class PersonController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@ResponseBody
 	public String update(@PathVariable Integer id, @ModelAttribute("person") Person person, HttpServletRequest request,
-			HttpServletResponse response){
+			HttpServletResponse response) {
 		ResultVO resultVO = new ResultVO();
 		Person oldperson = personService.findById(id);
 		if (oldperson != null) {
